@@ -15,39 +15,41 @@ def increment_quality(item, amount=1):
 def decrement_quality(item, amount=1):
     item.quality = clamp_quality(item.quality - amount)
 
-
 class GildedRose(object):
 
     def __init__(self, items):
         self.items = items
 
+    def _update_standard_item(self, item, expired):
+        decrement_quality(item, 2 if expired else 1)
+
+    def _update_aged_brie(self, item, expired):
+        increment_quality(item, 2 if expired else 1)
+    
+    def _update_backstage_passes(self, item, expired):
+        
+        if expired:
+            item.quality = 0
+        else:
+            if item.sell_in < 6:
+                increment_quality(item, 3)
+            elif item.sell_in < 11:
+                increment_quality(item, 2)
+            else:
+                increment_quality(item, 1)
+
     def update_quality(self):
         for item in self.items:
-            if item.name not in [AGED_BRIE, BACKSTAGE_PASSES, SULFURAS]:
-                decrement_quality(item)
+            if item.name == SULFURAS:
+                continue
+            elif item.name == AGED_BRIE:
+                self._update_aged_brie(item, item.sell_in <= 0)
+            elif item.name == BACKSTAGE_PASSES:
+                self._update_backstage_passes(item, item.sell_in <= 0)
             else:
-                if item.quality < 50:
-                    increment_quality(item)
-                    if item.name == BACKSTAGE_PASSES:
-                        if item.sell_in < 11:
-                            if item.quality < 50:
-                                increment_quality(item)
-                        if item.sell_in < 6:
-                            if item.quality < 50:
-                                increment_quality(item)
-            if item.name != SULFURAS:
-                item.sell_in = item.sell_in - 1
-            if item.sell_in < 0:
-                if item.name != AGED_BRIE:
-                    if item.name != BACKSTAGE_PASSES:
-                        if item.quality > 0:
-                            if item.name != SULFURAS:
-                                decrement_quality(item)
-                    else:
-                        decrement_quality(item, item.quality)
-                else:
-                    if item.quality < 50:
-                        increment_quality(item)
+                self._update_standard_item(item, item.sell_in <= 0)
+
+            item.sell_in -= 1
 
 
 class Item:
