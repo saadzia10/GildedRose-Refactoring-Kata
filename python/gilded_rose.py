@@ -1,14 +1,16 @@
 # -*- coding: utf-8 -*-
-from updaters import StandardUpdater, AgedBrieUpdater, BackstagePassesUpdater, SulfurasUpdater
+from updaters import StandardUpdater, AgedBrieUpdater, BackstagePassesUpdater, SulfurasUpdater, ConjuredUpdater
 
 SULFURAS = "Sulfuras, Hand of Ragnaros"
 AGED_BRIE = "Aged Brie"
 BACKSTAGE_PASSES = "Backstage passes to a TAFKAL80ETC concert"
+CONJURED = "Conjured Mana Cake"
 
 UPDATERS = {
     SULFURAS: SulfurasUpdater(),
     AGED_BRIE: AgedBrieUpdater(),
     BACKSTAGE_PASSES: BackstagePassesUpdater(),
+    CONJURED: ConjuredUpdater()
 }
 
 def get_updater(item):

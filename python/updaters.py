@@ -47,3 +47,9 @@ class BackstagePassesUpdater(Updater):
             else:
                 self._inc(item, 1)
         item.sell_in -= 1
+
+class ConjuredUpdater(Updater):
+    def update(self, item):
+        change = 4 if item.sell_in <= 0 else 2
+        self._dec(item, change)
+        item.sell_in -= 1
