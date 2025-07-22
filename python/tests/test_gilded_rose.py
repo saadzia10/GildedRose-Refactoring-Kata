@@ -105,3 +105,19 @@ def test_backstage_increments_tiers(sell_in, expected_inc):
     item = run_item_days(item, 1)
     assert item.quality == start_q + expected_inc
 
+# Conjured Items
+
+def test_conjured_degrades_by_2_before_expiry():
+    item = Item("Conjured Mana Cake", sell_in=3, quality=10)
+    item = run_item_days(item, 1)
+    assert item.quality == 8
+
+def test_conjured_degrades_by_4_after_expiry():
+    item = Item("Conjured Mana Cake", sell_in=0, quality=10)
+    item = run_item_days(item, 1)
+    assert item.quality == 6
+
+def test_conjured_zero_quality():
+    item = Item("Conjured Mana Cake", sell_in=-1, quality=3)
+    item = run_item_days(item, 1)
+    assert item.quality == 0
